@@ -1,5 +1,5 @@
 //
-// Copyright 2016 Pixar
+// Copyright 2020 Pixar
 //
 // Licensed under the Apache License, Version 2.0 (the "Apache License")
 // with the following modification; you may not use this file except in
@@ -21,23 +21,38 @@
 // KIND, either express or implied. See the Apache License for the specific
 // language governing permissions and limitations under the Apache License.
 //
-
 #include "pxr/pxr.h"
-#include "pxr/base/tf/pyModule.h"
 
-PXR_NAMESPACE_USING_DIRECTIVE
+#include "pxr/usd/ar/defineResolverContext.h"
+#include "pxr/base/tf/hash.h"
+#include <string>
 
-TF_WRAP_MODULE
+PXR_NAMESPACE_OPEN_SCOPE
+
+class _TestURIResolverContext
 {
-    TF_WRAP(ResolvedPath);
+public:
+    _TestURIResolverContext() = default;
+    _TestURIResolverContext(const _TestURIResolverContext&) = default;
+    explicit _TestURIResolverContext(const std::string& s)
+        : data(s)
+    { }
 
-    TF_WRAP(Resolver);
-    TF_WRAP(ResolverContext);
-    TF_WRAP(ResolverContextBinder);
-    TF_WRAP(ResolverScopedCache);
+    bool operator<(const _TestURIResolverContext& rhs) const
+    { return data < rhs.data; } 
 
-    TF_WRAP(DefaultResolver);
-    TF_WRAP(DefaultResolverContext);
+    bool operator==(const _TestURIResolverContext& rhs) const
+    { return data == rhs.data; } 
 
-    TF_WRAP(PackageUtils);
+    std::string data;
+};
+
+size_t 
+hash_value(const _TestURIResolverContext& rhs)
+{
+    return TfHash()(rhs.data);
 }
+
+AR_DECLARE_RESOLVER_CONTEXT(_TestURIResolverContext);
+
+PXR_NAMESPACE_CLOSE_SCOPE

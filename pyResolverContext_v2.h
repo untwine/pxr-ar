@@ -1,5 +1,5 @@
 //
-// Copyright 2016 Pixar
+// Copyright 2020 Pixar
 //
 // Licensed under the Apache License, Version 2.0 (the "Apache License")
 // with the following modification; you may not use this file except in
@@ -21,23 +21,43 @@
 // KIND, either express or implied. See the Apache License for the specific
 // language governing permissions and limitations under the Apache License.
 //
+#ifndef INCLUDE_AR_PY_RESOLVER_CONTEXT
+#error This file should not be included directly. Include pyResolverContext.h instead
+#endif
+
+#ifndef PXR_USD_AR_PY_RESOLVER_CONTEXT_V2_H
+#define PXR_USD_AR_PY_RESOLVER_CONTEXT_V2_H
+
+/// \file ar/pyResolverContext_v2.h
+/// Macros for creating Python bindings for objects used with 
+/// ArResolverContext.
+
+#include <boost/python/implicit.hpp>
 
 #include "pxr/pxr.h"
-#include "pxr/base/tf/pyModule.h"
+#include "pxr/usd/ar/resolverContext.h"
 
-PXR_NAMESPACE_USING_DIRECTIVE
+PXR_NAMESPACE_OPEN_SCOPE
 
-TF_WRAP_MODULE
+/// Register the specified type as a context object that may be converted from
+/// Python into a ArResolverContext object in C++.  This typically would be
+/// called in the source file where the Python wrapping for the context object
+/// is defined.
+template <class Context>
+void 
+ArWrapResolverContextForPython();
+
+#ifndef doxygen
+
+template <class Context>
+void 
+ArWrapResolverContextForPython()
 {
-    TF_WRAP(ResolvedPath);
+    boost::python::implicitly_convertible<Context, ArResolverContext>();
+};
 
-    TF_WRAP(Resolver);
-    TF_WRAP(ResolverContext);
-    TF_WRAP(ResolverContextBinder);
-    TF_WRAP(ResolverScopedCache);
+#endif //doxygen
 
-    TF_WRAP(DefaultResolver);
-    TF_WRAP(DefaultResolverContext);
+PXR_NAMESPACE_CLOSE_SCOPE
 
-    TF_WRAP(PackageUtils);
-}
+#endif

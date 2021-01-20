@@ -1,5 +1,5 @@
 //
-// Copyright 2016 Pixar
+// Copyright 2020 Pixar
 //
 // Licensed under the Apache License, Version 2.0 (the "Apache License")
 // with the following modification; you may not use this file except in
@@ -21,23 +21,47 @@
 // KIND, either express or implied. See the Apache License for the specific
 // language governing permissions and limitations under the Apache License.
 //
-
 #include "pxr/pxr.h"
-#include "pxr/base/tf/pyModule.h"
+
+#include "pxr/usd/ar/definePackageResolver.h"
+#include "pxr/usd/ar/packageResolver.h"
+
+#include "pxr/base/tf/diagnosticLite.h"
+#include "pxr/base/tf/stringUtils.h"
 
 PXR_NAMESPACE_USING_DIRECTIVE
 
-TF_WRAP_MODULE
+// Test package resolver that handles packages of the form
+// "foo.package[...]"
+class _TestPackageResolver
+    : public ArPackageResolver
 {
-    TF_WRAP(ResolvedPath);
+public:
+    virtual std::string Resolve(
+        const std::string& resolvedPackagePath,
+        const std::string& packagedPath) override
+    {
+        TF_AXIOM(TfStringEndsWith(resolvedPackagePath, ".package"));
+        return packagedPath;
+    }
 
-    TF_WRAP(Resolver);
-    TF_WRAP(ResolverContext);
-    TF_WRAP(ResolverContextBinder);
-    TF_WRAP(ResolverScopedCache);
+    virtual std::shared_ptr<ArAsset> OpenAsset(
+        const std::string& resolvedPackagePath,
+        const std::string& resolvedPackagedPath) override
+    {
+        return nullptr;
+    }
 
-    TF_WRAP(DefaultResolver);
-    TF_WRAP(DefaultResolverContext);
+    virtual void BeginCacheScope(
+        VtValue* cacheScopeData) override
+    {
+    }
 
-    TF_WRAP(PackageUtils);
-}
+    virtual void EndCacheScope(
+        VtValue* cacheScopeData) override
+    {
+    }
+
+};
+
+AR_DEFINE_PACKAGE_RESOLVER(_TestPackageResolver, ArPackageResolver);

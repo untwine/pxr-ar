@@ -1,5 +1,5 @@
 //
-// Copyright 2016 Pixar
+// Copyright 2020 Pixar
 //
 // Licensed under the Apache License, Version 2.0 (the "Apache License")
 // with the following modification; you may not use this file except in
@@ -21,23 +21,13 @@
 // KIND, either express or implied. See the Apache License for the specific
 // language governing permissions and limitations under the Apache License.
 //
-
 #include "pxr/pxr.h"
-#include "pxr/base/tf/pyModule.h"
+#include "pxr/usd/ar/writableAsset.h"
 
-PXR_NAMESPACE_USING_DIRECTIVE
+PXR_NAMESPACE_OPEN_SCOPE
 
-TF_WRAP_MODULE
-{
-    TF_WRAP(ResolvedPath);
+ArWritableAsset::ArWritableAsset() = default;
 
-    TF_WRAP(Resolver);
-    TF_WRAP(ResolverContext);
-    TF_WRAP(ResolverContextBinder);
-    TF_WRAP(ResolverScopedCache);
+ArWritableAsset::~ArWritableAsset() = default;
 
-    TF_WRAP(DefaultResolver);
-    TF_WRAP(DefaultResolverContext);
-
-    TF_WRAP(PackageUtils);
-}
+PXR_NAMESPACE_CLOSE_SCOPE
