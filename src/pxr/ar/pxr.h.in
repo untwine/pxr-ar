@@ -1,0 +1,50 @@
+// Copyright 2016 Pixar
+//
+// Licensed under the terms set forth in the LICENSE.txt file available at
+// https://openusd.org/license.
+//
+#ifndef PXR_AR_H
+#define PXR_AR_H
+
+#include <pxr/arch/pxr.h>
+#include <pxr/tf/pxr.h>
+#include <pxr/js/pxr.h>
+#include <pxr/plug/pxr.h>
+#include <pxr/vt/pxr.h>
+
+#ifdef PXR_PYTHON_SUPPORT_ENABLED
+#include <pxr/boost/python/common.hpp>
+#endif
+
+#define AR_MAJOR_VERSION @PROJECT_VERSION_MAJOR@
+#define AR_MINOR_VERSION @PROJECT_VERSION_MINOR@
+#define AR_PATCH_VERSION @PROJECT_VERSION_PATCH@
+
+#define PXR_NS pxr
+#define AR_INTERNAL_NS pxrInternal_v@PROJECT_VERSION_MAJOR@_@PROJECT_VERSION_MINOR@_@PROJECT_VERSION_PATCH@__pxrReserved__
+#define PXR_NS_GLOBAL ::PXR_NS
+
+namespace AR_INTERNAL_NS { }
+
+namespace PXR_NS {
+    using namespace AR_INTERNAL_NS;
+}
+
+// Import direct dependencies into ar's internal namespace.
+// This keeps resolution correct if package versions ever drift.
+namespace AR_INTERNAL_NS {
+    using namespace ARCH_INTERNAL_NS;
+    using namespace TF_INTERNAL_NS;
+    using namespace JS_INTERNAL_NS;
+    using namespace PLUG_INTERNAL_NS;
+    using namespace VT_INTERNAL_NS;
+#ifdef PXR_PYTHON_SUPPORT_ENABLED
+    using namespace BOOST_INTERNAL_NS;
+#endif
+}
+
+#define AR_NAMESPACE_OPEN_SCOPE   namespace AR_INTERNAL_NS {
+#define AR_NAMESPACE_CLOSE_SCOPE  }
+#define AR_NAMESPACE_USING_DIRECTIVE using namespace PXR_NS;
+
+#endif // PXR_AR_H
