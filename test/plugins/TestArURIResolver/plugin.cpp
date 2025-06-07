@@ -6,7 +6,7 @@
 //
 #include <pxr/ar/pxr.h>
 
-#include "TestArURIResolver_plugin.h"
+#include "plugin.h"
 
 #include <pxr/ar/defaultResolver.h>
 #include <pxr/ar/defineResolver.h>

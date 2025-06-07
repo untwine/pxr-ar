@@ -22,6 +22,7 @@ protected:
     void _PrintFunctionName(const std::string& func) const
     {
         printf("%s\n", func.c_str());
+        fflush(stdout);
     }
 
     void _BindContext(

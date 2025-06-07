@@ -6,7 +6,7 @@
 //
 #include <pxr/ar/pxr.h>
 
-#include "TestArURIResolver_plugin.h"
+#include "plugin.h"
 
 #include <pxr/ar/defaultResolverContext.h>
 #include <pxr/ar/defineResolverContext.h>
@@ -20,6 +20,7 @@
 #include <pxr/tf/diagnosticMgr.h>
 #include <pxr/tf/pathUtils.h>
 #include <pxr/tf/setenv.h>
+#include <pxr/tf/getenv.h>
 #include <pxr/tf/status.h>
 #include <pxr/tf/stringUtils.h>
 #include <pxr/tf/token.h>
@@ -36,10 +37,7 @@ SetupPlugins()
     // Register TestArURIResolver plugin. We assume the build system will
     // install it to the ArPlugins subdirectory in the same location as
     // this test.
-    const std::string uriResolverPluginPath =
-        TfStringCatPaths(
-            TfGetPathName(ArchGetExecutablePath()),
-            "ArPlugins/lib/TestArURIResolver*/Resources/") + "/";
+    const std::string uriResolverPluginPath = pxr::TfGetenv("PLUGIN_PATH");
 
     PlugPluginPtrVector plugins =
         PlugRegistry::GetInstance().RegisterPlugins(uriResolverPluginPath);

@@ -16,16 +16,9 @@ from pxr import Plug, Ar, Tf
 class TestArPackageResolver(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        # Register test resolver plugins
-        # Test plugins are installed relative to this script
-        testRoot = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)), 'ArPlugins')
-
+        # Register test resolver plugin.
         pr = Plug.Registry()
-
-        testPackageResolverPath = os.path.join(
-            testRoot, 'lib/TestArPackageResolver*/Resources/')
-        pr.RegisterPlugins(testPackageResolverPath)
+        pr.RegisterPlugins(os.environ.get("AR_PACKAGE_RESOLVER_PLUGIN"))
 
     def assertPathsEqual(self, path1, path2):
         # Flip backslashes to forward slashes to accommodate platform

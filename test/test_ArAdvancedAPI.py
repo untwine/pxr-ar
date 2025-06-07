@@ -9,9 +9,6 @@ import unittest
 
 from pxr import Plug, Ar, Tf
 
-# Test plugins are installed relative to this script
-testRoot = os.path.join(os.path.dirname(__file__), 'ArPlugins')
-testPluginsDsoSearch = testRoot + '/lib/TestArAdvancedAPI*/Resources/'
 
 class TestArAdvancedAPI(unittest.TestCase):
     def test_GetAvailableResolvers(self):
@@ -21,7 +18,7 @@ class TestArAdvancedAPI(unittest.TestCase):
         # Register test resolver plugin and verify we have the
         # expected ArResolver subclasses.
         pr = Plug.Registry()
-        plugins = pr.RegisterPlugins(testPluginsDsoSearch)
+        plugins = pr.RegisterPlugins(os.environ.get("AR_ADVANCED_API_PLUGIN"))
         self.assertEqual(len(plugins), 1)
 
         resolverTypes = pr.GetAllDerivedTypes('ArResolver')

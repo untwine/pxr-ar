@@ -1,0 +1,4 @@
+add_subdirectory(TestArAdvancedAPI)
+add_subdirectory(TestArOptionalImplementation)
+add_subdirectory(TestArPackageResolver)
+add_subdirectory(TestArURIResolver)
