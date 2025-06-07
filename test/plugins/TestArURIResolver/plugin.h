@@ -32,7 +32,7 @@ public:
 size_t 
 hash_value(const _TestURIResolverContext& rhs)
 {
-    return TfHash()(rhs.data);
+    return pxr::TfHash()(rhs.data);
 }
 
 AR_DECLARE_RESOLVER_CONTEXT(_TestURIResolverContext);
