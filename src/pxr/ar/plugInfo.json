@@ -3,20 +3,20 @@
         {
             "Info": {
                 "Types": {
-                    "ArResolver": {},
-                    "ArDefaultResolver": {
+                    "pxr::ArResolver": {},
+                    "pxr::ArDefaultResolver": {
                         "bases": [
-                            "ArResolver"
+                            "pxr::ArResolver"
                         ],
                         "implementsContexts": true
                     },
-                    "ArPackageResolver": {}
+                    "pxr::ArPackageResolver": {}
                 }
             },
             "LibraryPath": "@PLUG_INFO_LIBRARY_PATH@", 
             "Name": "ar", 
-            "ResourcePath": "@PLUG_INFO_RESOURCE_PATH@", 
-            "Root": "@PLUG_INFO_ROOT@", 
+            "ResourcePath": "resources",
+            "Root": "..",
             "Type": "library"
         }
     ]

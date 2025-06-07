@@ -3,13 +3,11 @@
         {
             "Type": "library",
             "Name": "TestArURIResolver",
-            "Root": "@TEST_PLUG_INFO_ROOT@",
-            "LibraryPath": "@TEST_PLUG_INFO_LIBRARY_PATH@",
-            "ResourcePath": "@TEST_PLUG_INFO_RESOURCE_PATH@",
+            "LibraryPath": "$<TARGET_FILE:TestArURIResolver>",
             "Info": {
                 "Types": {
                     "_TestURIResolverBase": {
-                        "bases": ["ArResolver"],
+                        "bases": ["pxr::ArResolver"],
                         "implementsContexts": true
                     },
                     "_TestURIResolver": {

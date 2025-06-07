@@ -18,19 +18,9 @@ class TestArURIResolver(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Register test resolver plugins
-        # Test plugins are installed relative to this script
-        testRoot = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)), 'ArPlugins')
-
         pr = Plug.Registry()
-
-        testURIResolverPath = os.path.join(
-            testRoot, 'lib/TestArURIResolver*/Resources/')
-        pr.RegisterPlugins(testURIResolverPath)
-
-        testPackageResolverPath = os.path.join(
-            testRoot, 'lib/TestArPackageResolver*/Resources/')
-        pr.RegisterPlugins(testPackageResolverPath)
+        pr.RegisterPlugins(os.environ.get("AR_URI_RESOLVER_PLUGIN"))
+        pr.RegisterPlugins(os.environ.get("AR_PACKAGE_RESOLVER_PLUGIN"))
 
     def test_Setup(self):
         # Verify that our test plugin was registered properly.

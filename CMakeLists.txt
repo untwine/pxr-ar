@@ -1,306 +1,106 @@
-set(PXR_PREFIX pxr/usd)
-set(PXR_PACKAGE ar)
+cmake_minimum_required(VERSION 3.21...3.31)
 
-pxr_library(ar
-    LIBRARIES
-        arch
-        js
-        tf
-        plug
-        vt
-        ${TBB_tbb_LIBRARY}
+# Default build type value.
+set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the build type")
 
-    INCLUDE_DIRS
-        ${TBB_INCLUDE_DIRS}
-
-    PUBLIC_CLASSES
-        asset
-        assetInfo
-        defaultResolver
-        defaultResolverContext
-        definePackageResolver
-        defineResolver
-        filesystemAsset
-        filesystemWritableAsset
-        inMemoryAsset
-        notice
-        packageResolver
-        packageUtils
-        resolvedPath
-        resolver
-        resolverContext
-        resolverContextBinder
-        resolverScopedCache
-        timestamp
-        writableAsset
-
-    PUBLIC_HEADERS
-        api.h
-        ar.h
-        defineResolverContext.h
-        threadLocalScopedCache.h
-
-    PRIVATE_HEADERS
-        debugCodes.h
-        testenv/TestArURIResolver_plugin.h
-
-    CPPFILES
-        debugCodes.cpp
-
-    PYTHON_PUBLIC_CLASSES
-        pyResolverContext
-
-    PYMODULE_CPPFILES
-        module.cpp
-        wrapAsset.cpp
-        wrapAssetInfo.cpp
-        wrapDefaultResolverContext.cpp
-        wrapDefaultResolver.cpp
-        wrapNotice.cpp
-        wrapPackageUtils.cpp
-        wrapResolvedPath.cpp
-        wrapResolverContextBinder.cpp
-        wrapResolverContext.cpp
-        wrapResolverScopedCache.cpp
-        wrapResolver.cpp
-        wrapTimestamp.cpp
-
-    PYMODULE_FILES
-        __init__.py
-
-    RESOURCE_FILES
-        plugInfo.json
-
-    DOXYGEN_FILES
-        overview.dox
+project(pxr-ar
+    VERSION 0.25.5
+    HOMEPAGE_URL "https://github.com/untwine/pxr-ar"
+    LANGUAGES C CXX
 )
 
-pxr_test_scripts(
-    testenv/testArAssetInfo.py
-    testenv/testArAdvancedAPI.py
-    testenv/testArDefaultResolver.py
-    testenv/testArOpenAsset.py
-    testenv/testArPackageUtils.py
-    testenv/testArResolvedPath.py
-    testenv/testArResolverContext.py
-    testenv/testArTimestamp.py
-)
-
-pxr_build_test_shared_lib(TestArAdvancedAPI
-    INSTALL_PREFIX ArPlugins
-    LIBRARIES
-        tf
-        ar
-    CPPFILES
-        testenv/TestArAdvancedAPI_plugin.cpp
-) 
-
-pxr_build_test_shared_lib(TestArPackageResolver
-    INSTALL_PREFIX ArPlugins
-    LIBRARIES
-        tf
-        ar
-    CPPFILES
-        testenv/TestArPackageResolver_plugin.cpp
-) 
-
-pxr_build_test_shared_lib(TestArOptionalImplementation
-    INSTALL_PREFIX ArPlugins
-    LIBRARIES
-        tf
-        ar
-    CPPFILES
-        testenv/TestArOptionalImplementation_plugin.cpp
-) 
-
-pxr_test_scripts(
-    testenv/testArOptionalImplementation.py
-)
-
-pxr_install_test_dir(
-    SRC testenv/testArOptionalImplementation
-    DEST testArOptionalImplementation_1
-)
-
-pxr_install_test_dir(
-    SRC testenv/testArOptionalImplementation
-    DEST testArOptionalImplementation_2
-)
-
-pxr_install_test_dir(
-    SRC testenv/testArOptionalImplementation
-    DEST testArOptionalImplementation_3
-)
-
-pxr_install_test_dir(
-    SRC testenv/testArOptionalImplementation
-    DEST testArOptionalImplementation_4
-)
-
-pxr_install_test_dir(
-    SRC testenv/testArOptionalImplementation
-    DEST testArOptionalImplementation_5
-)
-
-pxr_register_test(testArOptionalImplementation_1
-    PYTHON
-    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArOptionalImplementation _TestResolver"
-    STDOUT_REDIRECT base.txt
-    DIFF_COMPARE base.txt
-)
-
-pxr_register_test(testArOptionalImplementation_2
-    PYTHON
-    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArOptionalImplementation _TestResolverWithContextMethods"
-    STDOUT_REDIRECT resolver_with_context.txt
-    DIFF_COMPARE resolver_with_context.txt
-)
-
-pxr_register_test(testArOptionalImplementation_3
-    PYTHON
-    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArOptionalImplementation _TestDerivedResolverWithContextMethods"
-    STDOUT_REDIRECT derived_resolver_with_context.txt
-    DIFF_COMPARE derived_resolver_with_context.txt
-)
-
-pxr_register_test(testArOptionalImplementation_4
-    PYTHON
-    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArOptionalImplementation _TestResolverWithCacheMethods"
-    STDOUT_REDIRECT resolver_with_cache.txt
-    DIFF_COMPARE resolver_with_cache.txt
-)
-
-pxr_register_test(testArOptionalImplementation_5
-    PYTHON
-    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArOptionalImplementation _TestDerivedResolverWithCacheMethods"
-    STDOUT_REDIRECT derived_resolver_with_cache.txt
-    DIFF_COMPARE derived_resolver_with_cache.txt
-)
-
-# This test relies on a plugin built specifically for this test.
-# The build system currently doesn't support this for static library
-# builds, so we only enable this test on shared library builds.
-if (BUILD_SHARED_LIBS)
-    pxr_build_test_shared_lib(TestArURIResolver
-        INSTALL_PREFIX ArPlugins
-        LIBRARIES
-            tf
-            ar
-        CPPFILES
-            testenv/TestArURIResolver_plugin.cpp
-    ) 
-
-    pxr_build_test(testArURIResolver_CPP
-        LIBRARIES
-            arch
-            tf
-            ar
-        CPPFILES
-            testenv/testArURIResolver.cpp
-    )
-
-    pxr_test_scripts(
-        testenv/testArURIResolver.py
-    )
-
-    pxr_register_test(testArURIResolver
-        PYTHON
-        COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArURIResolver"
-    )
-
-    pxr_register_test(testArURIResolver_CPP
-        COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArURIResolver_CPP"
-    )
+if (NOT "${CMAKE_CXX_STANDARD}")
+    set(CMAKE_CXX_STANDARD 17 CACHE STRING "Default C++ standard")
 endif()
 
-pxr_build_test(testArDefaultResolver_CPP
-    LIBRARIES
-        arch
-        tf
-        ar
-    CPPFILES
-        testenv/testArDefaultResolver.cpp
-) 
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-pxr_build_test(testArNotice_CPP
-    LIBRARIES
-        arch
-        tf
-        ar
-    CPPFILES
-        testenv/testArNotice.cpp
-) 
+# Default options.
+option(BUILD_TESTS "Build tests" ON)
+option(BUILD_SHARED_LIBS "Build Shared Library" ON)
+option(BUILD_PYTHON_BINDINGS "Build Python Bindings" ON)
+option(ENABLE_PRECOMPILED_HEADERS "Enable precompiled headers." OFF)
 
-pxr_register_test(testArNotice_CPP
-    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArNotice_CPP"
+if (NOT BUILD_SHARED_LIBS)
+    add_compile_definitions(PXR_STATIC)
+endif()
+
+include(GNUInstallDirs)
+
+if (WIN32)
+    # Prevent WinDef.h from defining min/max macros.
+    add_definitions(-DNOMINMAX)
+
+    # Exclude unnecessary Windows APIs for faster builds and fewer macro conflicts.
+    add_definitions(-DWIN32_LEAN_AND_MEAN)
+
+    # Disable /Zc:inline in VS 2019+ to retain "arch_ctor_<name>" symbols in release.
+    # https://developercommunity.visualstudio.com/t/914943
+    if (MSVC_VERSION GREATER_EQUAL 1920)
+        set(CMAKE_CXX_FLAGS "/Zc:inline- ${CMAKE_CXX_FLAGS}")
+    else()
+        set(CMAKE_CXX_FLAGS "/Zc:inline ${CMAKE_CXX_FLAGS}")
+    endif()
+
+    # Disable harmless Visual Studio warning C4003 (non-standard preprocessor).
+    # https://developercommunity.visualstudio.com/t/364698
+    set(CMAKE_CXX_FLAGS "/wd4003 ${CMAKE_CXX_FLAGS}")
+endif()
+
+# Update build type from environment for CMake < 3.22
+if (DEFINED ENV{CMAKE_BUILD_TYPE})
+    set(CMAKE_BUILD_TYPE $ENV{CMAKE_BUILD_TYPE}
+        CACHE STRING "Specifies the build type" FORCE)
+endif()
+
+find_package(pxr-arch 0.25.5 REQUIRED)
+find_package(pxr-tf 0.25.5 REQUIRED)
+find_package(pxr-js 0.25.5 REQUIRED)
+find_package(pxr-plug 0.25.5 REQUIRED)
+find_package(pxr-vt 0.25.5 REQUIRED)
+find_package(TBB 2017.0 REQUIRED)
+
+if(BUILD_PYTHON_BINDINGS)
+    add_compile_definitions(PXR_PYTHON_SUPPORT_ENABLED=1)
+    find_package(pxr-boost 0.25.5 REQUIRED)
+
+    if (NOT CMAKE_INSTALL_PYTHON_LIBDIR)
+        set(py_version "${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}")
+        set(CMAKE_INSTALL_PYTHON_LIBDIR
+            "${CMAKE_INSTALL_LIBDIR}/python${py_version}/site-packages"
+            CACHE INTERNAL "Installation Python library path.")
+    endif ()
+endif()
+
+add_subdirectory(src)
+
+# Build and setup tests if required.
+if (BUILD_TESTS)
+    # Python is needed to run the tests.
+    find_package(Python COMPONENTS Interpreter Development REQUIRED)
+    find_package(Pytest)
+
+    enable_testing()
+    add_subdirectory(test)
+endif()
+
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(
+    "cmake/pxr-ar-config.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/pxr-ar-config.cmake"
+    INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/pxr-ar
 )
 
-pxr_build_test(testArResolverContext_CPP
-    LIBRARIES
-        arch
-        tf
-        ar
-    CPPFILES
-        testenv/testArResolverContext.cpp
-) 
-
-pxr_build_test(testArThreadedAssetCreation
-    LIBRARIES
-        arch
-        tf
-        ar
-    CPPFILES
-        testenv/testArThreadedAssetCreation.cpp
-) 
-
-pxr_register_test(testArAssetInfo
-    PYTHON
-    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArAssetInfo"
+write_basic_package_version_file(
+    "pxr-ar-config-version.cmake"
+    COMPATIBILITY AnyNewerVersion
 )
 
-pxr_register_test(testArAdvancedAPI
-    PYTHON
-    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArAdvancedAPI"
-)
-
-pxr_register_test(testArDefaultResolver
-    PYTHON
-    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArDefaultResolver"
-)
-
-pxr_register_test(testArDefaultResolver_CPP
-    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArDefaultResolver_CPP"
-)
-
-pxr_register_test(testArOpenAsset
-    PYTHON
-    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArOpenAsset"
-)
-
-pxr_register_test(testArPackageUtils
-    PYTHON
-    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArPackageUtils"
-)
-
-pxr_register_test(testArResolvedPath
-    PYTHON
-    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArResolvedPath"
-)
-
-pxr_register_test(testArTimestamp
-    PYTHON
-    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArTimestamp"
-)
-
-pxr_register_test(testArResolverContext
-    PYTHON
-    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArResolverContext"
-)
-
-pxr_register_test(testArResolverContext_CPP
-    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArResolverContext_CPP"
-)
-
-pxr_register_test(testArThreadedAssetCreation
-    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testArThreadedAssetCreation"
+install(
+    FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/pxr-ar-config.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/pxr-ar-config-version.cmake"
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/pxr-ar
 )
